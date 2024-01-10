@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    container_name: "mongodb"
+
+  backend-container:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: "backend-container"
+    volumes:
+      - backend-logs:/app/logs
+      - ./backend:/app  # Updated path to be relative
+    ports:
+      - "80:80"  # Host:Container port mapping
+
+  frontend-container:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app  # Updated path to be relative
+    ports:
+      - "3000:3000"  # Host:Container port mapping
+    container_name: "frontend-container"
+
+volumes:
+  data:
+  backend-logs:
